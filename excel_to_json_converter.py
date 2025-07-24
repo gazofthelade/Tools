@@ -1,4 +1,6 @@
-# Script to read an excel file and produce a json file using the data
+# Name: excel_to_json_converter.py
+# Description: Script to read an excel file and produce a json file using the data. It scans each sheet and produces a 
+# json file for each.
 # Created By: Gareth Durban
 # Date: 24/07/2025
 
@@ -14,18 +16,20 @@ file_path = f"{file_name}.xlsx"
 excel_data = pd.ExcelFile(file_path)
 
 # Directory to save the output JSON files
-output_dir = "trick_probabilities_json"
+output_dir = f"{file_name}_json_files"
 os.makedirs(output_dir, exist_ok=True)
 
 # Convert each sheet to a JSON file
 for sheet in excel_data.sheet_names:
+    # Parse excel file
     df = excel_data.parse(sheet)
+    # Empty dictionary for tricks
     tricks = {}
 
     # Assuming first column is 'Level', others are trick names
     for trick in df.columns[1:]:
         level_probabilities = {
-            str(row['Level']): row[trick]
+            int(row['Level']): round(row[trick], 2)
             for _, row in df.iterrows()
         }
         tricks[trick] = level_probabilities
